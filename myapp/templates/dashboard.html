@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        
+        <title>Copilot Home (Replica)</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      display: flex;
+      height: 100vh;
+    }
+    .sidebar {
+      width: 200px;
+      background-color:#F0F8FF;
+      color: white;
+      border-right: 1px solid #ddd;
+      display: flex;
+      
+      flex-direction: column;
+      padding: 1rem;
+    }
+    .sidebar.collapsed {
+      width: 60px; /* collapsed width */
+    }
+    .sidebar.collapsed h1,
+    .sidebar.collapsed a {
+        display: none;   /* hide text elements when collapsed */
+    }
+
+    .toggle-btn {
+      background: #333;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      padding: 0.5rem 1rem;
+      margin: 1rem 0;
+      border-radius: 4px;
+    }
+    .logo {
+        justify-content:start;
+        color: black;
+    }
+    .sidebar a {
+      background: gray;
+      display: block;
+      padding: 1rem;
+      text-decoration: none;
+      border-radius: 25px;
+      transition: box-shadow 0.3s ease;
+      margin-bottom: 12px;
+    }
+    .sidebar a:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    }
+    .main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    .header {
+        background: rgb(63, 140, 103);
+        display: flex;              /* enables flexbox */
+        align-items: center;        /* vertically centers children */
+        border-bottom: 1px solid #ddd;
+
+        padding: 0.5rem 1rem;
+    }
+
+    .content {
+      flex: 1;
+      padding: 2rem;
+      overflow-y: auto;
+    }
+  </style>
+  <script>
+    function toggleSidebar() { 
+        document.getElementById("sidebar").classList.toggle("collapsed"); 
+    } 
+  </script>
+</head>
+<body>
+  <div class="sidebar" id="sidebar">
+    <div class="logo">
+        <button class="toggle-btn" onclick="toggleSidebar()">☰</button>
+        <h1>Meets</h1>
+    </div>
+    <a href="#">Scheduled meets</a>
+    <a href="#">Approved Meets</a>
+    <a href="#">Rejected meets</a>
+    <a href="#">Rescheduled meets</a>
+    <a href="#">Reports</a>
+    
+    <!-- Add more conversation links -->
+  </div>
+  <div class="main">
+    <div class="header">
+      <h1>Dashboard</h1>
+    </div>
+    <div class="content">
+      
+    </div>
+  </div>
+  
+    </body>
+</html>
