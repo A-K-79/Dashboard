@@ -1,112 +1,362 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        
-        <title>Copilot Home (Replica)</title>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Meets Dashboard</title>
   <style>
-    body {
+    :root {
+      --brand-green: #74c27d;
+      --brand-emerald: #149886;
+      --brand-forest: #3f8c67;
+      --brand-dark: #1e3c72;
+      --bg-light: #f8fafc;
+      --text-light: #1e293b;
+      --sidebar-width: 260px;
+      --sidebar-collapsed: 70px;
+      --header-height: 60px;
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .dark-mode {
+      --bg-light: #0f172a;
+      --text-light: #f1f5f9;
+      background-color: #0f172a;
+      color: #f1f5f9;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
       margin: 0;
-      font-family: Arial, sans-serif;
+      padding: 0;
+      min-height: 100%;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--bg-light);
+      color: var(--text-light);
+      transition: background-color 0.5s ease;
       display: flex;
-      height: 100vh;
-    }
-    .sidebar {
-      width: 200px;
-      background-color:#F0F8FF;
-      color: white;
-      border-right: 1px solid #ddd;
-      display: flex;
-      
       flex-direction: column;
-      padding: 1rem;
     }
-    .sidebar.collapsed {
-      width: 60px; /* collapsed width */
+
+    /* Layout Wrapper - Flex allows side-by-side on all devices */
+    .layout {
+      display: flex;
+      flex: 1 0 auto; /* Allow layout to grow and fill space, but not shrink */
+      width: 100%;
+      padding-top: var(--header-height); /* Entire layout starts below header */
+      min-height: calc(100vh - var(--header-height));
     }
-    .sidebar.collapsed h1,
-    .sidebar.collapsed a {
-        display: none;   /* hide text elements when collapsed */
+
+    /* Fixed Header */
+    .header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: var(--header-height);
+      background: linear-gradient(90deg, var(--brand-forest), var(--brand-dark));
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 1.5rem;
+      color: white;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      z-index: 1100;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .header h1 {
+      margin: 0;
+      font-size: 1.25rem;
+      font-weight: 600;
     }
 
     .toggle-btn {
-      background: #333;
-      color: #fff;
-      border: none;
+      background: rgba(255,255,255,0.15);
+      color: white;
       cursor: pointer;
-      padding: 0.5rem 1rem;
-      margin: 1rem 0;
-      border-radius: 4px;
+      width: 40px;
+      height: 40px;
+      border: none;
+      border-radius: 10px;
+      font-size: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
     }
-    .logo {
-        justify-content:start;
-        color: black;
+    .toggle-btn:hover { background: rgba(255,255,255,0.25); }
+
+    /* Sidebar - Extends to the bottom of the layout section */
+    .sidebar {
+      width: var(--sidebar-width);
+      background-color: var(--brand-green);
+      display: flex;
+      flex-direction: column;
+      padding: 1.25rem 0.75rem;
+      transition: var(--transition);
+      z-index: 1000;
+      flex-shrink: 0; 
+      /* The flex container ensures this grows to match the content height */
     }
+
+    .dark-mode .sidebar {
+      background-color: #1e293b;
+      border-right: 1px solid #334155;
+    }
+
+    .sidebar h2 {
+      color: white;
+      font-size: 1.5rem;
+      margin: 0 0 2rem 0.5rem;
+      transition: var(--transition);
+      white-space: nowrap;
+      overflow: hidden;
+    }
+
+    /* Collapsed Sidebar State */
+    .sidebar.collapsed {
+      width: var(--sidebar-collapsed);
+    }
+    .sidebar.collapsed h2 {
+      opacity: 0;
+      width: 0;
+    }
+    .sidebar.collapsed a span {
+      display: none;
+    }
+    .sidebar.collapsed a {
+      justify-content: center;
+      padding-left: 0;
+      padding-right: 0;
+    }
+
     .sidebar a {
-      background: gray;
-      display: block;
-      padding: 1rem;
+      background: var(--brand-emerald);
+      display: flex;
+      align-items: center;
+      padding: 0.8rem 1.2rem;
       text-decoration: none;
-      border-radius: 25px;
-      transition: box-shadow 0.3s ease;
-      margin-bottom: 12px;
+      border-radius: 12px;
+      transition: var(--transition);
+      margin-bottom: 10px;
+      color: white;
+      gap: 12px;
+      font-weight: 500;
+      white-space: nowrap;
     }
+
     .sidebar a:hover {
-      transform: translateY(-10px);
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+      background: var(--brand-forest);
+      transform: translateX(4px);
     }
+
+    /* Main Content Area */
     .main {
       flex: 1;
       display: flex;
       flex-direction: column;
-    }
-    .header {
-        background: rgb(63, 140, 103);
-        display: flex;              /* enables flexbox */
-        align-items: center;        /* vertically centers children */
-        border-bottom: 1px solid #ddd;
-
-        padding: 0.5rem 1rem;
+      min-width: 0; 
     }
 
     .content {
       flex: 1;
       padding: 2rem;
-      overflow-y: auto;
+    }
+
+    .card {
+      background: white;
+      padding: 2rem;
+      border-radius: 20px;
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+      border: 1px solid #e2e8f0;
+      margin-bottom: 2rem;
+    }
+    .dark-mode .card {
+      background: #1e293b;
+      border-color: #334155;
+    }
+
+    /* Profile and Dark Toggle */
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .dark-toggle {
+      background: white;
+      border: none;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+    .dark-mode .dark-toggle { background: #334155; color: white; }
+
+    .user-info {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+    }
+    .profile-pic {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 2px solid white;
+    }
+    .profile-pic img { width: 100%; height: 100%; object-fit: cover; }
+    .username { font-weight: 600; font-size: 0.9rem; }
+
+    /* Dropdown */
+    .dropdown-menu {
+      position: absolute;
+      top: 50px;
+      right: 0;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+      display: none;
+      flex-direction: column;
+      min-width: 150px;
+      padding: 5px;
+      z-index: 1200;
+    }
+    .dropdown-menu a {
+      padding: 10px;
+      text-decoration: none;
+      color: #333;
+      border-radius: 5px;
+    }
+    .dropdown-menu a:hover { background: #f1f5f9; }
+    .dark-mode .dropdown-menu { background: #1e293b; border: 1px solid #334155; }
+    .dark-mode .dropdown-menu a { color: white; }
+    .dark-mode .dropdown-menu a:hover { background: #334155; }
+
+    /* Footer - Now outside layout to span the entire line */
+    .footer {
+      width: 100%;
+      background: linear-gradient(90deg, var(--brand-dark), var(--brand-forest));
+      color: white;
+      text-align: center;
+      padding: 1.5rem;
+      font-size: 0.9rem;
+      flex-shrink: 0; /* Keep its height */
+    }
+    .dark-mode .footer { background: #000; border-top: 1px solid #334155; }
+
+    /* Minimal adjustments for very small screens */
+    @media (max-width: 600px) {
+      .username { display: none; }
+      .content { padding: 1rem; }
+      .sidebar { padding: 1rem 0.5rem; }
+      .header h1 { font-size: 1rem; }
     }
   </style>
-  <script>
-    function toggleSidebar() { 
-        document.getElementById("sidebar").classList.toggle("collapsed"); 
-    } 
-  </script>
 </head>
 <body>
-  <div class="sidebar" id="sidebar">
-    <div class="logo">
-        <button class="toggle-btn" onclick="toggleSidebar()">☰</button>
-        <h1>Meets</h1>
-    </div>
-    <a href="#">Scheduled meets</a>
-    <a href="#">Approved Meets</a>
-    <a href="#">Rejected meets</a>
-    <a href="#">Rescheduled meets</a>
-    <a href="#">Reports</a>
-    
-    <!-- Add more conversation links -->
-  </div>
-  <div class="main">
-    <div class="header">
+
+  <div class="header">
+    <div class="header-left">
+      <button class="toggle-btn" onclick="toggleSidebar()">☰</button>
       <h1>Dashboard</h1>
     </div>
-    <div class="content">
-      
+    
+    <div class="header-actions">
+      <button class="dark-toggle" onclick="toggleDarkMode()">☽</button>
+      <div class="user-info" onclick="toggleDropdown(event)">
+        <div class="profile-pic">
+          <img src="https://i.pinimg.com/1200x/28/a9/f5/28a9f597acdfbef477e6978c9f23d4c4.jpg" alt="Profile">
+        </div>
+        <span class="username">Adhithyan</span>
+        <div class="dropdown-menu" id="dropdownMenu">
+          <a href="#">My Profile</a>
+          <a href="#">Log Out</a>
+        </div>
+      </div>
     </div>
   </div>
-  
-    </body>
+
+  <div class="layout">
+    <!-- Sidebar - Extends down to meet the footer -->
+    <div class="sidebar" id="sidebar">
+      <h2>Meets</h2>
+      <a href="#" title="Scheduled meets"><span>Scheduled meets</span> 📅</a>
+      <a href="#" title="Approved Meets"><span>Approved Meets</span> ✔️</a>
+      <a href="#" title="Rejected meets"><span>Rejected meets</span> ❌</a>
+      <a href="#" title="Rescheduled meets"><span>Rescheduled meets</span> 🔄</a>
+      <a href="#" title="Reports"><span>Reports</span> 📊</a>
+    </div>
+
+    <!-- Main Section -->
+    <div class="main">
+      <div class="content">
+        <div class="card">
+          <h2 style="margin-top:0">Welcome back, Adhithyan!</h2>
+          <p>The footer has been moved so it spans the entire width of the page, regardless of the sidebar's state.</p>
+          
+          <div style="margin-top: 2rem;">
+            <h3>Energy Consumption Thesis Outline</h3>
+            <p><strong>Title:</strong> Energy Consumption Prediction in Smart Grids using Machine Learning</p>
+            <p>Smart grids represent the evolution of conventional power systems toward more flexible, automated, and data‑driven infrastructures. A central challenge in smart‑grid operation is accurate energy consumption prediction, often referred to as load forecasting.</p>
+            
+            
+            
+            
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <p id="copyright"></p>
+  </div>
+
+  <script>
+    function toggleSidebar() {
+      const sidebar = document.getElementById("sidebar");
+      sidebar.classList.toggle("collapsed");
+    }
+
+    function toggleDarkMode() {
+      document.body.classList.toggle("dark-mode");
+      const btn = document.querySelector(".dark-toggle");
+      btn.textContent = document.body.classList.contains("dark-mode") ? "☀️" : "☽";
+    }
+
+    function toggleDropdown(event) {
+      event.stopPropagation();
+      const menu = document.getElementById("dropdownMenu");
+      menu.style.display = menu.style.display === "flex" ? "none" : "flex";
+    }
+
+    document.addEventListener('click', () => {
+      document.getElementById("dropdownMenu").style.display = "none";
+    });
+
+    const currentYear = new Date().getFullYear();
+    document.getElementById("copyright").innerHTML = `&copy; ${currentYear} Dashboard | All Rights Reserved`;
+
+    // Automatically collapse sidebar on small mobile screens on load for better usability
+    window.addEventListener('load', () => {
+      if (window.innerWidth < 600) {
+        document.getElementById("sidebar").classList.add("collapsed");
+      }
+    });
+  </script>
+</body>
 </html>
